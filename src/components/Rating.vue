@@ -1,39 +1,40 @@
 <template>
     <div @mouseover="hovered = true" @mouseleave="hovered = false">
-      <Star :key="index" v-if="hovered" @hover-in="(r) => hoveredStar(r, index)" @hover-move="(r) => hoveredStar(r, index)" @hover-out="stopHovering" @click="(e) => clickOnStar(e, index)" :size="size" :rate="value" ref="starsRefs" v-for="(value, index) in starRates"></Star>
+      <Star :key="index" v-if="hovered" @in="(r: number) => hoveredStar(r, index)" @out="stopHovering" @click="clickOnStar" :size="size" :rate="value" v-for="(value, index) in starRates"></Star>
       <Star v-else :size="size" :rate="value" ref="starsRefs" v-for="value in starRatesSaved"></Star>
     </div>
 </template>
 
 <script setup lang="ts">
-
-import {ref} from "vue";
+import {Ref, ref} from "vue";
 import Star from "./Star.vue";
 
-const starsRefs = ref([]);
-
-const starRates = ref([0,0,0,0,0]);
-const starRatesSaved = ref([0,0,0,0,0]);
-const hovered = ref(false);
-
-const props = defineProps({
+defineProps({
     size: Number,
 });
-function hoveredStar(rate, id: number) {
+
+const starRates: Ref<Array<number>>  = ref([0,0,0,0,0]);
+const starRatesSaved: Ref<Array<number>> = ref([0,0,0,0,0]);
+const hovered: Ref<boolean> = ref(false);
+
+
+function hoveredStar(index: number, rate: number): void {
     starRates.value = [0,0,0,0,0];
-    for (let i = 0; i < id; i++) {
+    for (let i = 0; i < index; i++) {
         starRates.value[i] = 4;
     }
-    starRates.value[id] = rate;
+    starRates.value[index] = rate;
 }
 
-function clickOnStar(event, id: number) {
+function clickOnStar(): void {
     starRatesSaved.value = starRates.value;
 }
 
-function stopHovering() {
+function stopHovering(): void {
     starRates.value = [0,0,0,0,0];
 }
+
+
 </script>
 
 <style scoped>

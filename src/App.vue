@@ -3,7 +3,7 @@ import Rating from "./components/Rating.vue";
 </script>
 
 <template>
-    <Rating :size="96"></Rating>
+    <rating></rating>
 </template>
 
 <style scoped>

@@ -28,10 +28,12 @@ const val4 = ref(0);
             <h2>Vertu</h2>
             <rating @click="(v) => val4 = v"></rating>
         </div>
-        <div v-show="val1 != 0 && val2 != 0 && val3 != 0 && val4 != 0">
-            <h2>Total</h2>
-            <rating :value="(val1+val2+val3+val4)/4"></rating>
-        </div>
+        <transition>
+            <div v-if="val1 != 0 && val2 != 0 && val3 != 0 && val4 != 0">
+                <h2>Total</h2>
+                <rating :value="(val1+val2+val3+val4)/4"></rating>
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -40,5 +42,16 @@ const val4 = ref(0);
         display: grid;
         grid-column: 2;
         grid-row: 2;
+    }
+
+    .v-enter-active,
+    .v-leave-active {
+        transition: all 0.5s ease;
+    }
+
+    .v-enter-from,
+    .v-leave-to {
+        transform: translateX(-80px);
+        opacity: 0;
     }
 </style>

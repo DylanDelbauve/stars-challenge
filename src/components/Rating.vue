@@ -21,10 +21,6 @@
 <script setup lang="ts">
 // @ts-nocheck
 const props = defineProps({
-    disabled: {
-        type: Boolean,
-        default: false
-    },
     value: {
         type: Number
     }
@@ -32,22 +28,28 @@ const props = defineProps({
 
 const emit = defineEmits(['click'])
 
-import {onMounted, Ref, ref, watch} from "vue";
+import {nextTick, onMounted, Ref, ref, watch} from "vue";
 
 const stars = ref([]);
 
-const result: Ref<HTMLElement> = ref(document);
+const result: Ref<HTMLElement> = ref(null);
 
 const rate: Ref<Number> = ref<Number>(0);
 
 const onClickAnimation = ref(false);
 
 onMounted(() => {
-    watch(() => props.value, (newValue) => {
-        if(newValue != null && newValue != 0 && result.value != null) {
-            result.value.style.maskImage = 'linear-gradient(90deg, #000000 0%, #000000 ' + newValue*20 + '%, transparent ' + newValue*20 + '%, transparent 100%)'
-            result.value.style.fill = `hsl(${newValue * 20}, 100%, 65%)`;
+    nextTick(() => {
+        if(result.value != null) {
+            result.value.style.maskImage = `linear-gradient(90deg, black 0%, black ${props.value * 20}%, rgba(0,0,0,0) ${props.value * 20}%)`;
+            result.value.style.fill = `hsl(${props.value * 20}, 100%, 65%)`;
         }
+        watch(() => props.value, (newValue) => {
+            if(newValue != null && newValue != 0 && result.value != null) {
+                result.value.style.maskImage = `linear-gradient(90deg, black 0%, black ${newValue * 20}%, rgba(0,0,0,0) ${newValue * 20}%)`
+                result.value.style.fill = `hsl(${newValue * 20}, 100%, 65%)`;
+            }
+        })
     })
 })
 function hover(index: Number) {
@@ -127,12 +129,6 @@ function out() {
 .clickAnimation {
     animation: 250ms linear 0s;
     animation-name: click;
-}
-.disabled {
-    position: absolute;
-    z-index: 2;
-    width: 100%;
-    height: 100%;
 }
 
 @keyframes click {
